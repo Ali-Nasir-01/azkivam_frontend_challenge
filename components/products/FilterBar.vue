@@ -6,7 +6,7 @@
       <div class="mt-4">
         <div v-for="(category, index) in categories" :key="index" class="my-3">
           <div class="parent-category">
-            <span>
+            <span @click="selectCategory(category)">
               {{ category.name }}
             </span>
             <Icon
@@ -21,7 +21,7 @@
               :key="childIndex"
               class="my-3 text-gray-900"
             >
-              <span>
+              <span @click="selectCategory(child)">
                 {{ child.name }}
               </span>
             </li>
@@ -39,6 +39,7 @@ import type { CategoryList } from "@/types";
 
 const { $axios } = useNuxtApp();
 const appConfig = useAppConfig();
+const router = useRouter();
 const action = appConfig.endpoints.CATEGORIES;
 const categories = ref<CategoryList[]>([]);
 
@@ -79,6 +80,10 @@ const fillData = (data: Category[]) => {
     const parent = categories.value.find((item) => item.id === parentId);
     parent?.children.push(category);
   }
+};
+
+const selectCategory = (category) => {
+  router.push(`/products/${category.id}/${category.slug}`);
 };
 
 onBeforeMount(() => {
