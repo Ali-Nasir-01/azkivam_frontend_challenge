@@ -3,18 +3,37 @@
     <span id="filters-title"> فیلترها </span>
     <div class="list">
       <span class="title">دسته‌بندی‌ها</span>
-      <ul>
-        <li v-for="(category, index) in categories" :key="index">
-          <span>
-            {{ category.name }}
-          </span>
-        </li>
-      </ul>
+      <div class="mt-4">
+        <div v-for="(category, index) in categories" :key="index" class="my-3">
+          <div class="parent-category">
+            <span>
+              {{ category.name }}
+            </span>
+            <Icon
+              class="icon text-gray-600"
+              :icon="category.open ? 'mdi:chevron-down' : 'mdi:chevron-up'"
+              @click="category.open = !category.open"
+            />
+          </div>
+          <ul v-if="category.open" class="px-3 child-categories">
+            <li
+              v-for="(child, childIndex) in category.children"
+              :key="childIndex"
+              class="my-3 text-gray-900"
+            >
+              <span>
+                {{ child.name }}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import type { Category } from "@/types/apis";
 import type { CategoryList } from "@/types";
 
@@ -47,6 +66,7 @@ const fillData = (data: Category[]) => {
     if (parentIndex !== -1) {
       categories.value.push({
         ...sortedCategories[parentIndex],
+        open: true,
         children: [],
       });
       sortedCategories.splice(parentIndex, 1);
@@ -79,18 +99,45 @@ onBeforeMount(() => {
 }
 
 .list {
-  margin-top: 1.5rem;
+  margin-top: 1.2rem;
+  user-select: none;
 
   .title {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 500;
   }
 
-  ul {
-    margin-top: 0.5rem;
+  .parent-category {
+    display: flex;
+    align-items: center;
+
     span {
-      font-size: 0.9rem;
-      font-weight: 500;
+      margin-left: 8px;
+      font-weight: 400;
+      font-size: 1rem;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .icon {
+      font-size: 25px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .child-categories {
+    font-weight: 300;
+    font-size: 1rem;
+
+    span {
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
