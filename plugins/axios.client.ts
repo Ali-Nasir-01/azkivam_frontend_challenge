@@ -8,7 +8,7 @@ export default defineNuxtPlugin(({$config}) => {
         withCredentials: true,
         retry: {
             retries: 3,
-            retryDelay: (retryCount) => {
+            retryDelay: (retryCount: number) => {
                 return retryCount * 1000;
             },
         },

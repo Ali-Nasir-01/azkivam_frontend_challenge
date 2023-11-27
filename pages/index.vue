@@ -1,5 +1,5 @@
 <template>
-  <div>here</div>
+  <div>تست</div>
 </template>
 
 <script setup lang="ts">
