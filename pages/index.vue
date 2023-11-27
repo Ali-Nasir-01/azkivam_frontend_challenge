@@ -1,5 +1,5 @@
 <template>
-  <div>تست</div>
+  <div></div>
 </template>
 
 <script setup lang="ts">
@@ -10,3 +10,5 @@ onMounted(() => {
   $axios.get("/categories");
 });
 </script>
+
+<style scoped lang="scss"></style>

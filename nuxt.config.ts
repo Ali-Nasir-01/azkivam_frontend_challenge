@@ -26,6 +26,13 @@ export default defineNuxtConfig({
         changeOrigin: true
       }
     }
-  }
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "@/assets/styles/variables.scss" as *;'
+        }
+      }
+    }
   }
 })
