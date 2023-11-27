@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url(./fonts.scss);
+
+* {
+    direction: rtl;
+    font-family: vazir;
+}

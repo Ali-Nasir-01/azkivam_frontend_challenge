@@ -1,7 +1,5 @@
 <template>
-  <div></div>
+  <div>products</div>
 </template>
 
 <script setup lang="ts"></script>
-
-<style scoped lang="scss"></style>
