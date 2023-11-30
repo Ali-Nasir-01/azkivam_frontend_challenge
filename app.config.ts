@@ -1,5 +1,6 @@
 export default defineAppConfig({
     endpoints: {
-        CATEGORIES: "/categories"
+        CATEGORIES: "/categories",
+        PRODUCTS: "/products"
     },
 });

@@ -8,5 +8,6 @@ export interface CategoryList {
     priority: number,
     mapped: boolean,
     parent: null | number,
+    open: boolean,
     children: [] | Category[]
 }
