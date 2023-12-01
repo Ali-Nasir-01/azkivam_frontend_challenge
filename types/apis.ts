@@ -7,3 +7,8 @@ export interface Category {
     mapped: boolean,
     parent: null | number,
 }
+
+export interface IMerchant {
+    id: number,
+    name: string,
+}

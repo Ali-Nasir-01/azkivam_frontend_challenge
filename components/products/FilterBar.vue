@@ -28,11 +28,15 @@
           </ul>
         </div>
       </div>
+      <hr class="my-5" />
+      <span class="title"> فروشگاه‌ها </span>
+      <merchants-list class="mt-2" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import MerchantsList from "~/components/products/MerchantsList";
 import { Icon } from "@iconify/vue";
 import type { Category } from "@/types/apis";
 import type { CategoryList } from "@/types";
@@ -82,7 +86,7 @@ const fillData = (data: Category[]) => {
   }
 };
 
-const selectCategory = (category) => {
+const selectCategory = (category: Category | CategoryList) => {
   router.push(`/products/${category.id}/${category.slug}`);
 };
 
