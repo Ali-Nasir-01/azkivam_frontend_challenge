@@ -7,16 +7,6 @@
 <script setup lang="ts"></script>
 
 <style scoped lang="scss">
-.center {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-}
-
 .loader {
   height: 32px;
   width: 32px;
