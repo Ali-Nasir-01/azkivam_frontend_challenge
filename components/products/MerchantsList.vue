@@ -24,6 +24,7 @@ import type { IMerchant } from "@/types/apis";
 
 const { $axios } = useNuxtApp();
 const appConfig = useAppConfig();
+const router = useRouter();
 const action = appConfig.endpoints.MERCHANTS;
 const merchants = ref<IMerchant[]>();
 const selectedMerchants = ref<number[]>([]);
@@ -38,17 +39,24 @@ const fetchMerchants = () => {
     .finally(() => {});
 };
 
-const selectValue = (id: number) => {
-  const index = selectedMerchants.value.findIndex((item) => item === id);
-  if (index) {
-    selectedMerchants.value.splice(index, 1);
-  } else {
-    selectedMerchants.value.push(id);
+const updateUrl = () => {
+  let query = {};
+  if (selectedMerchants.value.length > 0) {
+    query = {
+      merchantIds: selectedMerchants.value.join(","),
+    };
   }
+  router.replace({
+    query,
+  });
 };
 
 onBeforeMount(() => {
   fetchMerchants();
+});
+
+watch(selectedMerchants, () => {
+  updateUrl();
 });
 </script>
 
