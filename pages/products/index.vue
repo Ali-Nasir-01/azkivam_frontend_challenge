@@ -15,6 +15,7 @@ import type { IProduct } from "@/types";
 
 const { $axios } = useNuxtApp();
 const appConfig = useAppConfig();
+const { merchants } = useMerchants();
 const action = appConfig.endpoints.PRODUCTS;
 const size: number = 12;
 const page = shallowRef<number>(1);
@@ -24,8 +25,14 @@ const complete = shallowRef<boolean>(false);
 
 const fetchProducts = (firstInitial = false) => {
   if (firstInitial) loading.value = true;
+  let body = null;
+  if (merchants.value) {
+    body = {
+      merchantIds: merchants.value,
+    };
+  }
   $axios
-    .post(action, null, {
+    .post(action, body, {
       params: { size, page: page.value },
     })
     .then(({ status, data }) => {
@@ -42,6 +49,12 @@ const fetchProducts = (firstInitial = false) => {
       loading.value = false;
     });
 };
+
+watch(merchants, () => {
+  products.value = [];
+  page.value = 1;
+  fetchProducts();
+});
 
 onBeforeMount(() => {
   fetchProducts(true);
