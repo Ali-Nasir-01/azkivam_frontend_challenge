@@ -46,6 +46,7 @@ const updateUrl = () => {
       merchantIds: selectedMerchants.value.join(","),
     };
   }
+  window.scrollTo(0, 0);
   router.replace({
     query,
   });
