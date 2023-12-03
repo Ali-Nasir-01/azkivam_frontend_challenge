@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto mt-12 mb-10">
-    <div class="flex gap-4">
+    <div class="md:flex md:gap-4">
       <div class="md:w-[250px]">
         <filter-bar />
       </div>
-      <div class="w-full">
+      <div class="mt-5 md:mt-0 w-full">
         <slot />
       </div>
     </div>

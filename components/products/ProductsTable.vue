@@ -1,7 +1,9 @@
 <template>
   <div v-if="!loading">
     <div class="products-parent">
-      <div class="grid grid-cols-4">
+      <div
+        class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+      >
         <div
           v-for="(item, index) in products"
           :key="index"
