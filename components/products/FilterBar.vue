@@ -108,6 +108,7 @@ onBeforeMount(() => {
 
 <style scoped lang="scss">
 #container {
+  width: 100%;
   border-radius: 12px;
   border: solid $grey-color 2px;
   padding: 12px 8px;

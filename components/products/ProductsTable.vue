@@ -6,6 +6,10 @@
           v-for="(item, index) in products"
           :key="index"
           class="col-span-1 product"
+          :class="[
+            (index + 1) % 4 === 0 ? '' : 'border-left',
+            haveBorderIndex >= index + 1 ? 'border-bottom' : '',
+          ]"
         >
           <!-- Image -->
           <div class="parent-image">
@@ -60,6 +64,16 @@ const productsAction = appConfig.endpoints.PRODUCTS;
 const categoryProductsAction = appConfig.endpoints.CATEGORY_PRODUCTS;
 const size: number = 12;
 const page = shallowRef<number>(1);
+
+// This computed return a number based on products length to items can have border-bottom or not
+const haveBorderIndex = computed<number>(() => {
+  const a = products.value.length / 4;
+  if (Number.isInteger(a)) {
+    return a * 4 - 4;
+  }
+
+  return Math.floor(a) * 4;
+});
 
 const spinner = shallowRef<boolean>(false);
 const el = ref<HTMLElement | null>(null);
@@ -118,15 +132,19 @@ onBeforeMount(() => {
 
 <style scoped lang="scss">
 .products-parent {
-  border-top: solid $grey-color 2px;
-  border-right: solid $grey-color 2px;
+  border: solid $grey-color 2px;
   border-radius: 12px;
+
+  .border-bottom {
+    border-bottom: solid 2px $grey-color;
+  }
+
+  .border-left {
+    border-left: solid 2px $grey-color;
+  }
 
   .product {
     height: 380px;
-    border: solid $grey-color 2px;
-    border-top: none;
-    border-right: none;
 
     .parent-image {
       width: 100%;
