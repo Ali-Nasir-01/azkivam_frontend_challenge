@@ -1,11 +1,7 @@
 <template>
-  <div>slug {{ $route.params.id }}</div>
+  <div>
+    <products-table />
+  </div>
 </template>
 
-<script setup lang="ts">
-// const route = useRoute();
-
-// const test = () => {
-//   console.log(route);
-// };
-</script>
+<script setup lang="ts"></script>

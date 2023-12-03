@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div v-if="!loading">
     <div class="products-parent">
       <div class="grid grid-cols-4">
         <div
-          v-for="(item, index) in items"
+          v-for="(item, index) in products"
           :key="index"
           class="col-span-1 product"
         >
@@ -42,17 +42,24 @@
       </div>
     </div>
   </div>
+  <circle-loading v-else />
 </template>
 
 <script setup lang="ts">
 import type { IProduct } from "@/types";
 
-interface IProps {
-  items: IProduct[];
-  complete: boolean;
-}
-const props = defineProps<IProps>();
-const emit = defineEmits(["loadMore"]);
+const { $axios } = useNuxtApp();
+const { merchants } = useMerchants();
+const appConfig = useAppConfig();
+const products = ref<IProduct[]>([]);
+const loading = shallowRef<boolean>(true);
+const complete = shallowRef<boolean>(false);
+const route = useRoute();
+
+const productsAction = appConfig.endpoints.PRODUCTS;
+const categoryProductsAction = appConfig.endpoints.CATEGORY_PRODUCTS;
+const size: number = 12;
+const page = shallowRef<number>(1);
 
 const spinner = shallowRef<boolean>(false);
 const el = ref<HTMLElement | null>(null);
@@ -61,17 +68,52 @@ const { stop } = useIntersectionObserver(
   ([{ isIntersecting }], observerElement) => {
     spinner.value = isIntersecting;
     if (isIntersecting) {
-      emit("loadMore");
+      fetchProducts();
     }
   }
 );
 
-watch(
-  () => props.complete,
-  (newVal) => {
-    if (newVal) stop();
+const fetchProducts = (firstInitial = false) => {
+  let action = productsAction;
+  if (route.params?.id) {
+    action = setApi(categoryProductsAction, <string>route.params.id);
   }
-);
+  if (firstInitial) loading.value = true;
+  let body = null;
+  if (merchants.value) {
+    body = {
+      merchantIds: merchants.value,
+    };
+  }
+  $axios
+    .post(action, body, {
+      params: { size, page: page.value },
+    })
+    .then(({ status, data }) => {
+      if (data.data.length > 0) {
+        products.value.push(...data.data);
+        page.value += 1;
+        complete.value = false;
+      } else {
+        complete.value = true;
+        stop();
+      }
+    })
+    .catch((err) => {})
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+watch(merchants, () => {
+  products.value = [];
+  page.value = 1;
+  fetchProducts(true);
+});
+
+onBeforeMount(() => {
+  fetchProducts(true);
+});
 </script>
 
 <style scoped lang="scss">
