@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import type { IProduct } from "@/types";
 
-const { $axios } = useNuxtApp();
+const { $fetch } = useNuxtApp();
 const { merchants } = useMerchants();
 const { breakPoint } = useDisplay();
 const appConfig = useAppConfig();
@@ -103,13 +103,14 @@ const fetchProducts = (firstInitial = false) => {
       merchantIds: merchants.value,
     };
   }
-  $axios
-    .post(action, body, {
-      params: { size, page: page.value },
-    })
-    .then(({ status, data }) => {
-      if (data.data.length > 0) {
-        products.value.push(...data.data);
+  $fetch(action, {
+    method: "post",
+    body,
+    query: { size, page: page.value },
+  })
+    .then(({ data }) => {
+      if (data.length > 0) {
+        products.value.push(...data);
         page.value += 1;
         complete.value = false;
       } else {

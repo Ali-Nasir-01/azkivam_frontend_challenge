@@ -34,7 +34,7 @@
 import type { IMerchant } from "@/types/apis";
 import { Icon } from "@iconify/vue";
 
-const { $axios } = useNuxtApp();
+const { $fetch } = useNuxtApp();
 const appConfig = useAppConfig();
 const router = useRouter();
 const action = appConfig.endpoints.MERCHANTS;
@@ -48,15 +48,7 @@ const showMerchants = computed<IMerchant[]>(() => {
   return merchants.value.filter((item) => item.name.includes(search.value));
 });
 
-const fetchMerchants = () => {
-  $axios
-    .get(action)
-    .then(({ status, data }) => {
-      merchants.value = data.data;
-    })
-    .catch((err) => {})
-    .finally(() => {});
-};
+const { data, error } = await useAsyncData("merchants", () => $fetch(action));
 
 const updateUrl = () => {
   let query = {};
@@ -72,7 +64,7 @@ const updateUrl = () => {
 };
 
 onBeforeMount(() => {
-  fetchMerchants();
+  merchants.value = data.value.data;
 });
 
 watch(selectedMerchants, () => {
