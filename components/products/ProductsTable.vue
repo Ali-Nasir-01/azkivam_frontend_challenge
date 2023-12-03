@@ -161,6 +161,11 @@ onBeforeMount(() => {
       font-size: 14px;
       font-weight: 400;
       height: 40px;
+      text-overflow: ellipsis;
+      overflow-y: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
   }
 }
