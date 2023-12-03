@@ -1,6 +1,14 @@
 <template>
   <div id="container">
-    <span id="filters-title"> فیلترها </span>
+    <div class="flex">
+      <span id="filters-title"> فیلترها </span>
+      <span
+        v-if="isFiltered"
+        class="text-blue-800 text-sm cursor-pointer mr-auto"
+        @click="$router.push('/products')"
+        >حذف فیلتر</span
+      >
+    </div>
     <div class="list">
       <span class="title">دسته‌بندی‌ها</span>
       <div class="mt-4">
@@ -44,8 +52,11 @@ import type { CategoryList } from "@/types";
 const { $axios } = useNuxtApp();
 const appConfig = useAppConfig();
 const router = useRouter();
+const route = useRoute();
 const action = appConfig.endpoints.CATEGORIES;
 const categories = ref<CategoryList[]>([]);
+
+const isFiltered = computed<boolean>(() => (route.params?.id ? true : false));
 
 const fetchCategories = () => {
   $axios
