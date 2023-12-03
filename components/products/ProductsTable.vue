@@ -9,7 +9,7 @@
           :key="index"
           class="col-span-1 product"
           :class="[
-            (index + 1) % 4 === 0 ? '' : 'border-left',
+            (index + 1) % columnCount === 0 ? '' : 'border-left',
             haveBorderIndex >= index + 1 ? 'border-bottom' : '',
           ]"
         >
@@ -56,6 +56,7 @@ import type { IProduct } from "@/types";
 
 const { $axios } = useNuxtApp();
 const { merchants } = useMerchants();
+const { breakPoint } = useDisplay();
 const appConfig = useAppConfig();
 const products = ref<IProduct[]>([]);
 const loading = shallowRef<boolean>(true);
@@ -66,15 +67,16 @@ const productsAction = appConfig.endpoints.PRODUCTS;
 const categoryProductsAction = appConfig.endpoints.CATEGORY_PRODUCTS;
 const size: number = 12;
 const page = shallowRef<number>(1);
+const columnCount = shallowRef<number>(4);
 
 // This computed return a number based on products length to items can have border-bottom or not
 const haveBorderIndex = computed<number>(() => {
-  const a = products.value.length / 4;
+  const a = products.value.length / columnCount.value;
   if (Number.isInteger(a)) {
-    return a * 4 - 4;
+    return a * columnCount.value - columnCount.value;
   }
 
-  return Math.floor(a) * 4;
+  return Math.floor(a) * columnCount.value;
 });
 
 const spinner = shallowRef<boolean>(false);
@@ -121,6 +123,23 @@ const fetchProducts = (firstInitial = false) => {
     });
 };
 
+const returnColumnsCount = () => {
+  switch (breakPoint.value) {
+    case "xs":
+      return 1;
+    case "sm":
+      return 2;
+    case "md":
+      return 3;
+    default:
+      return 4;
+  }
+};
+
+const updateColumnsCount = () => {
+  columnCount.value = returnColumnsCount();
+};
+
 watch(merchants, () => {
   products.value = [];
   page.value = 1;
@@ -130,6 +149,14 @@ watch(merchants, () => {
 onBeforeMount(() => {
   fetchProducts(true);
 });
+
+watch(
+  breakPoint,
+  () => {
+    updateColumnsCount();
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped lang="scss">
