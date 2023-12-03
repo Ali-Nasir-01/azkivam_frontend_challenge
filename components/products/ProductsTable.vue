@@ -48,7 +48,7 @@
       </div>
     </div>
   </div>
-  <circle-loading v-else />
+  <circle-loading class="mx-auto md:mt-10" v-else />
 </template>
 
 <script setup lang="ts">
