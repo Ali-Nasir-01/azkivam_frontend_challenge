@@ -10,8 +10,16 @@
       >
     </div>
     <div class="list">
-      <span class="title">دسته‌بندی‌ها</span>
-      <div class="mt-4">
+      <div class="flex">
+        <span class="title">دسته‌بندی‌ها</span>
+        <Icon
+          v-if="smAndDown"
+          class="md:hidden text-3xl text-gray-600 mr-auto"
+          :icon="openCategoryFilter ? 'mdi:chevron-down' : 'mdi:chevron-up'"
+          @click="openCategoryFilter = !openCategoryFilter"
+        />
+      </div>
+      <div v-if="!smAndDown || openCategoryFilter" class="mt-4">
         <div v-for="(category, index) in categories" :key="index" class="my-3">
           <div class="parent-category">
             <span @click="selectCategory(category)">
@@ -51,10 +59,12 @@ import type { CategoryList } from "@/types";
 
 const { $axios } = useNuxtApp();
 const appConfig = useAppConfig();
+const { smAndDown } = useDisplay();
 const router = useRouter();
 const route = useRoute();
 const action = appConfig.endpoints.CATEGORIES;
 const categories = ref<CategoryList[]>([]);
+const openCategoryFilter = ref<boolean>(false);
 
 const isFiltered = computed<boolean>(() => (route.params?.id ? true : false));
 
@@ -104,10 +114,15 @@ const selectCategory = (category: Category | CategoryList) => {
 onBeforeMount(() => {
   fetchCategories();
 });
+
+watch(smAndDown, () => {
+  openCategoryFilter.value = false;
+});
 </script>
 
 <style scoped lang="scss">
 #container {
+  width: 100%;
   border-radius: 12px;
   border: solid $grey-color 2px;
   padding: 12px 8px;
