@@ -57,7 +57,7 @@ import { Icon } from "@iconify/vue";
 import type { Category } from "@/types/apis";
 import type { CategoryList } from "@/types";
 
-const { $axios } = useNuxtApp();
+const { $fetch } = useNuxtApp();
 const appConfig = useAppConfig();
 const { smAndDown } = useDisplay();
 const router = useRouter();
@@ -68,15 +68,7 @@ const openCategoryFilter = ref<boolean>(false);
 
 const isFiltered = computed<boolean>(() => (route.params?.id ? true : false));
 
-const fetchCategories = () => {
-  $axios
-    .get(action)
-    .then(({ status, data }) => {
-      fillData(data.data);
-    })
-    .catch((err) => {})
-    .finally(() => {});
-};
+const { data } = await useAsyncData("categories", () => $fetch(action));
 
 const fillData = (data: Category[]) => {
   // Sort categories based on priority
@@ -112,7 +104,7 @@ const selectCategory = (category: Category | CategoryList) => {
 };
 
 onBeforeMount(() => {
-  fetchCategories();
+  fillData(data.value.data);
 });
 
 watch(smAndDown, () => {

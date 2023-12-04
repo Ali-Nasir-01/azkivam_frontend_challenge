@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loading">
+  <div v-if="!loading && !error && !noResult">
     <div class="products-parent">
       <div
         class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
@@ -48,18 +48,21 @@
       </div>
     </div>
   </div>
-  <circle-loading class="mx-auto md:mt-10" v-else />
+  <circle-loading v-else-if="loading" class="mx-auto md:mt-10" />
+  <status-code-handler v-else :error="error" :no-result="noResult" />
 </template>
 
 <script setup lang="ts">
 import type { IProduct } from "@/types";
 
-const { $axios } = useNuxtApp();
+const { $fetch } = useNuxtApp();
 const { merchants } = useMerchants();
 const { breakPoint } = useDisplay();
 const appConfig = useAppConfig();
 const products = ref<IProduct[]>([]);
 const loading = shallowRef<boolean>(true);
+const error = shallowRef<boolean>(false);
+const noResult = shallowRef<boolean>(false);
 const complete = shallowRef<boolean>(false);
 const route = useRoute();
 
@@ -103,21 +106,26 @@ const fetchProducts = (firstInitial = false) => {
       merchantIds: merchants.value,
     };
   }
-  $axios
-    .post(action, body, {
-      params: { size, page: page.value },
-    })
-    .then(({ status, data }) => {
-      if (data.data.length > 0) {
-        products.value.push(...data.data);
+  $fetch(action, {
+    method: "post",
+    body,
+    query: { size, page: page.value },
+  })
+    .then(({ data }) => {
+      if (data.length > 0) {
+        products.value.push(...data);
         page.value += 1;
         complete.value = false;
+      } else if (firstInitial) {
+        noResult.value = true;
       } else {
         complete.value = true;
         stop();
       }
     })
-    .catch((err) => {})
+    .catch(() => {
+      error.value = true;
+    })
     .finally(() => {
       loading.value = false;
     });
