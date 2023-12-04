@@ -17,10 +17,11 @@
           <div class="parent-image">
             <NuxtImg
               :src="item.imageUrl"
+              preset="products"
               class="image"
               placeholder
-              format="webp"
               loading="lazy"
+              :alt="item.name"
             />
           </div>
           <!-- Content -->
@@ -189,7 +190,7 @@ watch(
       margin-top: 30px;
 
       .image {
-        height: 100%;
+        height: 180px;
         margin: 0 auto;
       }
     }
