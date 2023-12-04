@@ -68,7 +68,7 @@ const openCategoryFilter = ref<boolean>(false);
 
 const isFiltered = computed<boolean>(() => (route.params?.id ? true : false));
 
-const { data, error } = await useAsyncData("categories", () => $fetch(action));
+const { data } = await useAsyncData("categories", () => $fetch(action));
 
 const fillData = (data: Category[]) => {
   // Sort categories based on priority

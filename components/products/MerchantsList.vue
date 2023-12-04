@@ -48,7 +48,7 @@ const showMerchants = computed<IMerchant[]>(() => {
   return merchants.value.filter((item) => item.name.includes(search.value));
 });
 
-const { data, error } = await useAsyncData("merchants", () => $fetch(action));
+const { data } = await useAsyncData("merchants", () => $fetch(action));
 
 const updateUrl = () => {
   let query = {};
