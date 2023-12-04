@@ -66,7 +66,9 @@ const action = appConfig.endpoints.CATEGORIES;
 const categories = ref<CategoryList[]>([]);
 const openCategoryFilter = ref<boolean>(false);
 
-const isFiltered = computed<boolean>(() => (route.params?.id ? true : false));
+const isFiltered = computed<boolean>(
+  () => route.params.id || route.query.merchantIds
+);
 
 const { data } = await useAsyncData("categories", () => $fetch(action));
 

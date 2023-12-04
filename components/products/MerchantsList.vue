@@ -37,15 +37,16 @@ import { Icon } from "@iconify/vue";
 const { $fetch } = useNuxtApp();
 const appConfig = useAppConfig();
 const router = useRouter();
+const { merchants } = useMerchants();
 const action = appConfig.endpoints.MERCHANTS;
-const merchants = ref<IMerchant[]>([]);
+const merchantsList = ref<IMerchant[]>([]);
 const selectedMerchants = ref<number[]>([]);
 const search = ref<string>("");
 
 const showMerchants = computed<IMerchant[]>(() => {
-  if (!search.value) return merchants.value;
+  if (!search.value) return merchantsList.value;
 
-  return merchants.value.filter((item) => item.name.includes(search.value));
+  return merchantsList.value.filter((item) => item.name.includes(search.value));
 });
 
 const { data } = await useAsyncData("merchants", () => $fetch(action));
@@ -64,11 +65,16 @@ const updateUrl = () => {
 };
 
 onBeforeMount(() => {
-  merchants.value = data.value.data;
+  merchantsList.value = data.value.data;
+  selectedMerchants.value = merchants.value || [];
 });
 
 watch(selectedMerchants, () => {
   updateUrl();
+});
+
+watch(merchants, () => {
+  selectedMerchants.value = merchants.value || [];
 });
 </script>
 
